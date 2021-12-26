@@ -4,8 +4,16 @@ import copy
 class AlgorithmHuffman:
     """ Данный класс описывает работу алгоритма Хаффмана """
 
-    def __init__(self, *, file_name: str):
-        self.__file_name = file_name
+    def __init__(self, *, file_path_with_text: str,
+                 file_path_with_encode_text: str,
+                 file_path_with_codecs: str,
+                 file_path_with_decode_text: str):
+
+        self.__file_path_with_text = file_path_with_text if file_path_with_encode_text else 'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\text_1.txt'
+        self.__file_path_with_encode_text = file_path_with_encode_text if file_path_with_encode_text else 'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\encoded_text.txt'
+        self.__file_path_with_codecs = file_path_with_codecs if file_path_with_codecs else 'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\codec.txt'
+        self.__file_path_with_decode_text = file_path_with_decode_text if file_path_with_decode_text else 'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\decoded_text.txt'
+
         self.frequency_list = []
         self.buffer = list(range(10))
 
@@ -15,20 +23,19 @@ class AlgorithmHuffman:
 
         :return:
         """
-        codecs = self.get_codecs(self.get_lines_from_file('codec.txt'), encode=False)
-        text = self.get_lines_from_file('encoded_text.txt')
+        codecs = self.get_codecs(self.get_lines_from_file(self.__file_path_with_codecs), encode=False)
+        encode_text = self.get_lines_from_file(self.__file_path_with_encode_text)
 
-        char = ''
+        with open(self.__file_path_with_decode_text, 'w') as file_writer:
+            char = ''
 
-        with open('decoded_text.txt', 'w') as file_writer:
-            for line in text:
+            for line in encode_text:
                 for bit_num in line:
                     char += bit_num
 
                     if char in codecs:
                         file_writer.write(codecs[char])
 
-                        print(codecs[char])
                         char = ''
 
     def encoding_huffman(self):
@@ -37,16 +44,16 @@ class AlgorithmHuffman:
 
         :return:
         """
-        # Стираем кодировку из файла
-        with open('codec.txt', 'w') as file_writer:
+        # Стираем данные о кодировке из файла
+        with open(self.__file_path_with_codecs, 'w') as file_writer:
             file_writer.write('')
 
-        # Стираем закодированный из файла
-        with open('encoded_text.txt', 'w') as file_writer:
+        # Стираем закодированный текст из файла
+        with open(self.__file_path_with_encode_text, 'w') as file_writer:
             file_writer.write('')
 
         # Получаем строки из файла
-        lines = self.get_lines_from_file('text_1.txt')
+        lines = self.get_lines_from_file(self.__file_path_with_text)
 
         # Получаем лист частоты появлений символов в тексте
         frequency_list = self.get_the_char_frequency(lines=lines)
@@ -58,11 +65,19 @@ class AlgorithmHuffman:
         self.set_code_for_char(node=root, code=0)
 
         # Кодирование текста
-        codecs = self.get_codecs(self.get_lines_from_file('codec.txt'))
+        codecs = self.get_codecs(self.get_lines_from_file(self.__file_path_with_codecs))
         self.encoding_text(codecs, lines)
 
     @staticmethod
     def get_codecs(lines: list, encode: bool = True) -> dict:
+        """
+        Возвращает кодировку символ-битовое значение и обратно.
+
+        :param lines:
+        :param encode:
+        :return:
+        """
+
         codecs = dict()
 
         for line in lines:
@@ -73,9 +88,8 @@ class AlgorithmHuffman:
                 codecs[line[1]] = line[0]
         return codecs
 
-    @staticmethod
-    def encoding_text(codecs: dict, lines: list):
-        with open('encoded_text.txt', 'a') as file_writer:
+    def encoding_text(self, codecs: dict, lines: list):
+        with open(self.__file_path_with_encode_text, 'a') as file_writer:
             for line in lines:
                 for char in line:
                     file_writer.write(codecs[char])
@@ -94,7 +108,7 @@ class AlgorithmHuffman:
             for i in range(code):
                 symbol_value += str(self.buffer[i])
 
-            with open('codec.txt', 'a', newline='') as file_writer:
+            with open(self.__file_path_with_codecs, 'a', newline='') as file_writer:
                 file_writer.write(f'{node.name} is: {symbol_value}\n')
 
         elif node.sub_name:
@@ -121,7 +135,6 @@ class AlgorithmHuffman:
         while len(tree) != 1:
             tree.sort(key=lambda node: node.value, reverse=True)
 
-            # print(tree)
             first_element = tree.pop(-1)
             second_element = tree.pop(-1)
             name_first_element = first_element.name if first_element.name else first_element.sub_name
@@ -187,10 +200,44 @@ class Node:
         return f'{self.name, self.value}'
 
 
+def get_parameters():
+    print('Enter 1 if you want to encode the .txt file.')
+    print('Enter 2 if you want to decode the .txt file.')
+    encode_or_decode = input()
+
+    print('Enter absolute path to file with text.')
+    file_path_with_text = input(
+        'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\text_1.txt')
+
+    print('Enter absolute path to file with encode text.')
+    file_path_with_encode_text = input(
+        'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\encoded_text.txt')
+
+    print('Enter the absolute path to the file where the codecs will be saved.')
+    file_path_with_codecs = input(
+        'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\codec.txt')
+
+    print('Enter absolute path to file with decode text.')
+    file_path_with_decode_text = input(
+        'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\decoded_text.txt')
+
+    return encode_or_decode, file_path_with_text, file_path_with_encode_text, file_path_with_codecs, file_path_with_decode_text
+
+
 def main():
-    algorithm = AlgorithmHuffman(file_name='text_1.txt')
-    algorithm.encoding_huffman()
-    algorithm.decoding_huffman()
+    encode_or_decode, file_path_with_text, file_path_with_encode_text, file_path_with_codecs, file_path_with_decode_text\
+        = get_parameters()
+
+    algorithm = AlgorithmHuffman(file_path_with_text=file_path_with_text,
+                                 file_path_with_encode_text=file_path_with_encode_text,
+                                 file_path_with_codecs=file_path_with_codecs,
+                                 file_path_with_decode_text=file_path_with_decode_text)
+
+    if encode_or_decode == '1':
+        algorithm.encoding_huffman()
+
+    elif encode_or_decode == '2':
+        algorithm.decoding_huffman()
 
 
 if __name__ == '__main__':
