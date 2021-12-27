@@ -9,7 +9,7 @@ class AlgorithmHuffman:
                  file_path_with_codecs: str,
                  file_path_with_decode_text: str):
 
-        self.__file_path_with_text = file_path_with_text if file_path_with_encode_text else 'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\text_1.txt'
+        self.__file_path_with_text = file_path_with_text if file_path_with_text else 'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\text_1.txt'
         self.__file_path_with_encode_text = file_path_with_encode_text if file_path_with_encode_text else 'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\encoded_text.txt'
         self.__file_path_with_codecs = file_path_with_codecs if file_path_with_codecs else 'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\codec.txt'
         self.__file_path_with_decode_text = file_path_with_decode_text if file_path_with_decode_text else 'C:\\Users\\Никита\\Desktop\\3.TIC\\tic\\Algorithms\\Algorithm-of-Huffmans\\Folder-with-Text\\decoded_text.txt'
